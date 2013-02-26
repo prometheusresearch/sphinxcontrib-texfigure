@@ -1,0 +1,123 @@
+****************************************************************
+  ``sphinxcontrib-teximage`` -- TeX Image extension for Sphinx
+****************************************************************
+
+Overview
+========
+
+``sphinxcontrib-teximage`` is an extension for generating diagrams
+from TeX documents and embedding them into Sphinx_ documents.
+
+For an example of a diagram this extension could produce, please see
+http://htsql.org/doc/overview.html#htsql-in-a-nutshell
+
+This extension is similar in scope to `sphinxcontrib-tikz`_ extension,
+but with different approach to input and options.
+
+This software is written by Kirill Simonov (`Prometheus Research, LLC`_)
+and released under BSD license.
+
+
+Prerequisites
+=============
+
+To convert a TeX document to a raster image, the extension uses the
+following executables::
+
+* ``pdflatex``
+* ``pdftoppm``
+* ``pnmcrop``
+* ``pnmtopng``
+
+On a Debian_ or `Debian-derived`_ system, they could be installed with::
+
+    # apt-get install texlive
+    # apt-get install poppler-utils
+    # apt-get install netpbm
+
+If you want to generate diagrams using TikZ_, install::
+
+    # apt-get install texlive-pictures
+
+
+Usage
+=====
+
+To enable this extension, add the following line to ``conf.py``::
+
+    extensions.append('sphinxcontrib.teximage')
+
+To render an image from a TeX document, use ``teximage`` directive::
+
+    .. teximage:: diagram.tex
+
+Place the file ``diagram.tex`` in the same directory.  It must contain
+a valid TeX/LaTeX document.  For example::
+
+    \documentclass{article}
+
+    \usepackage{tikz}
+    \pagestyle{empty}
+
+    \begin{document}
+
+    \begin{tikzpicture}
+    \node[draw] {Hello, World!};
+    \end{tikzpicture}
+
+    \end{document}
+
+
+Reference
+=========
+
+Directives
+----------
+
+``teximage``
+    Renders an image from a TeX document.
+
+    Options:
+
+    ``align``
+        Image alignment (``left``, ``center``, or ``right``)
+
+    ``alt``
+        Image alternative text.
+
+Configuration parameters
+------------------------
+
+``teximage_pdftex`` (default: ``pdflatex``)
+    Path to ``pdftex`` or ``pdflatex`` executable.
+
+``teximage_pdftoppm`` (default: ``pdftoppm``)
+    Path to ``pdftoppm`` executable.
+
+``teximage_pnmcrop`` (default: ``pnmcrop``)
+    Path to ``pnmcrop`` executable.
+
+``teximage_pnmtopng`` (default: ``pnmtopng``)
+    Path to ``pnmtopng`` executable.
+
+``teximage_texinputs`` (default: ``[]``)
+    List of directories where TeX searches for input files.
+
+``teximage_resolution`` (default: ``110``)
+    Image resolution, in DPI.
+
+CSS classes
+-----------
+
+``teximage``
+    Wraps the generated image.
+
+
+.. _Sphinx: http://sphinx-doc.org/
+.. _sphinxcontrib-tikz: https://pypi.python.org/pypi/sphinxcontrib-tikz
+.. _Prometheus Research, LLC: http://prometheusresearch.com/
+.. _Debian: http://debian.org/
+.. _Debian-derived: http://ubuntu.com/
+.. _TikZ: http://www.texample.net/tikz/
+
+.. vim: set spell spelllang=en textwidth=72:

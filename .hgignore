@@ -1,0 +1,11 @@
+syntax: glob
+*.pyc
+*.pyo
+*.orig
+.*.sw?
+*.html
+*.egg-info
+_build
+build
+dist
+sandbox
