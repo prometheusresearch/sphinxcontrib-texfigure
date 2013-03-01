@@ -32,7 +32,7 @@ class TeXFigureDirective(Directive):
         filename = os.path.join(env.srcdir, filename)
         try:
             name, data, width, height = render_texfigure(env, filename)
-        except TeXFigureError, exc:
+        except TeXFigureError as exc:
             return [doc.reporter.error(str(exc))]
         node = texfigure()
         node['name'] = name
@@ -82,7 +82,7 @@ def render_texfigure(env, filename):
         ppmfile = os.path.join(temp, stem)+'-1.ppm'
         if not os.path.exists(ppmfile):
             raise TeXFigureError("file not found: %s" % ppmfile)
-        data = open(ppmfile).read()
+        data = open(ppmfile, 'rb').read()
         cmdline = [env.config.texfigure_pnmcrop]
         data = shell(cmdline, data)
         line = data.splitlines()[1]
@@ -99,7 +99,7 @@ def render_texfigure(env, filename):
 def shell(cmdline, input=None, env=None):
     try:
         process = Popen(cmdline, stdin=PIPE, stdout=PIPE, stderr=PIPE, env=env)
-    except OSError, exc:
+    except OSError as exc:
         raise TeXFigureError("cannot start executable `%s`: %s"
                              % (' '.join(cmdline), exc))
     output, error = process.communicate(input)

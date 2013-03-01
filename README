@@ -5,11 +5,11 @@
 Overview
 ========
 
-``sphinxcontrib-texfigure`` is an extension for generating figures and
-diagrams from TeX files and embedding them into Sphinx_ documents.
+``sphinxcontrib-texfigure`` is a Sphinx_ extension for generating
+figures and diagrams from TeX files.
 
 For an example of a diagram this extension could produce, please see
-http://htsql.org/doc/overview.html#htsql-in-a-nutshell
+http://htsql.org/doc/overview.html#htsql-in-a-nutshell.
 
 This extension is similar in scope to `sphinxcontrib-tikz`_ extension,
 but with different approach to input and options.
@@ -80,7 +80,7 @@ Directives
 ----------
 
 ``texfigure``
-    Renders an image from a TeX document.
+    Renders a figure from a TeX document.
 
     The parameter of the directive must be the path to a TeX/LaTeX file.
     This directive has no body.
@@ -117,7 +117,7 @@ CSS classes
 -----------
 
 ``texfigure``
-    Wraps the generated image.
+    Applies to the generated image.
 
 
 .. _Sphinx: http://sphinx-doc.org/
