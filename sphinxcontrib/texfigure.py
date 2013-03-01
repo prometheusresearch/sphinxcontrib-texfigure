@@ -10,7 +10,7 @@ from subprocess import Popen, PIPE
 import os, os.path, tempfile, shutil
 
 
-class TeXImageDirective(Directive):
+class TeXFigureDirective(Directive):
 
     required_arguments = 1
     has_content = False
@@ -31,10 +31,10 @@ class TeXImageDirective(Directive):
         env.note_dependency(filename)
         filename = os.path.join(env.srcdir, filename)
         try:
-            name, data, width, height = render_teximage(env, filename)
-        except TeXImageError, exc:
+            name, data, width, height = render_texfigure(env, filename)
+        except TeXFigureError, exc:
             return [doc.reporter.error(str(exc))]
-        node = teximage()
+        node = texfigure()
         node['name'] = name
         node['data'] = data
         node['width'] = width
@@ -44,15 +44,15 @@ class TeXImageDirective(Directive):
         return [node]
 
 
-class TeXImageError(Exception):
+class TeXFigureError(Exception):
     pass
 
 
-class teximage(nodes.General, nodes.Element):
+class texfigure(nodes.General, nodes.Element):
     pass
 
 
-def render_teximage(env, filename):
+def render_texfigure(env, filename):
     directory = os.path.dirname(filename)
     basename = os.path.basename(filename)
     stem = os.path.splitext(basename)[0]
@@ -60,58 +60,58 @@ def render_teximage(env, filename):
     temp = tempfile.mkdtemp()
     try:
         texinputs = [directory]
-        for texdir in env.config.teximage_texinputs:
+        for texdir in env.config.texfigure_texinputs:
             texdir = os.path.join(env.srcdir, texdir)
             texinputs.append(texdir)
         texinputs.append('')
         texinputs = ':'.join(texinputs)
         environ = os.environ.copy()
         environ['TEXINPUTS'] = texinputs
-        cmdline = [env.config.teximage_pdftex,
+        cmdline = [env.config.texfigure_pdftex,
                    '-halt-on-error',
                    '-interaction', 'nonstopmode',
                    '-output-directory', temp,
                    basename]
-        execute(cmdline, env=environ)
-        cmdline = [env.config.teximage_pdftoppm,
-                   '-r', str(env.config.teximage_resolution),
+        shell(cmdline, env=environ)
+        cmdline = [env.config.texfigure_pdftoppm,
+                   '-r', str(env.config.texfigure_resolution),
                    '-f', '1', '-l', '1',
                    os.path.join(temp, stem)+'.pdf',
                    os.path.join(temp, stem)]
-        execute(cmdline)
+        shell(cmdline)
         ppmfile = os.path.join(temp, stem)+'-1.ppm'
         if not os.path.exists(ppmfile):
-            raise TeXImageError("file not found: %s" % ppmfile)
+            raise TeXFigureError("file not found: %s" % ppmfile)
         data = open(ppmfile).read()
-        cmdline = [env.config.teximage_pnmcrop]
-        data = execute(cmdline, data)
+        cmdline = [env.config.texfigure_pnmcrop]
+        data = shell(cmdline, data)
         line = data.splitlines()[1]
         width, height = [int(chunk) for chunk in line.split()]
-        cmdline = [env.config.teximage_pnmtopng,
+        cmdline = [env.config.texfigure_pnmtopng,
                    '-transparent', 'white',
                    '-compression', '9']
-        data = execute(cmdline, data)
+        data = shell(cmdline, data)
     finally:
         shutil.rmtree(temp)
     return name, data, width, height
 
 
-def execute(cmdline, input=None, env=None):
+def shell(cmdline, input=None, env=None):
     try:
         process = Popen(cmdline, stdin=PIPE, stdout=PIPE, stderr=PIPE, env=env)
     except OSError, exc:
-        raise TeXImageError("cannot start executable `%s`: %s"
-                            % (' '.join(cmdline), exc))
+        raise TeXFigureError("cannot start executable `%s`: %s"
+                             % (' '.join(cmdline), exc))
     output, error = process.communicate(input)
     if process.returncode != 0:
         if not error:
             error = output
-        raise TeXImageError("`%s` exited with an error:\n%s"
-                            % (' '.join(cmdline), error))
+        raise TeXFigureError("`%s` exited with an error:\n%s"
+                             % (' '.join(cmdline), error))
     return output
 
 
-def visit_teximage(self, node):
+def visit_texfigure(self, node):
     href = "%s/%s" % (self.builder.imgpath, node['name'])
     filename = os.path.join(self.builder.outdir, '_images', node['name'])
     ensuredir(os.path.dirname(filename))
@@ -128,25 +128,25 @@ def visit_teximage(self, node):
     atts['height'] = node['height']
     if node['alt']:
         atts['alt'] = node['alt']
-    atts['class'] = 'teximage'
+    atts['class'] = 'texfigure'
     if node['align']:
         atts['class'] += ' align-%s' % node['align']
     self.body.append(self.emptytag(node, 'img', suffix, **atts))
 
 
-def depart_teximage(self, node):
+def depart_texfigure(self, node):
     pass
 
 
 def setup(app):
-    app.add_config_value('teximage_pdftex', 'pdflatex', 'env')
-    app.add_config_value('teximage_pdftoppm', 'pdftoppm', 'env')
-    app.add_config_value('teximage_pnmcrop', 'pnmcrop', 'env')
-    app.add_config_value('teximage_pnmtopng', 'pnmtopng', 'env')
-    app.add_config_value('teximage_texinputs', [], 'env')
-    app.add_config_value('teximage_resolution', 110, 'env')
-    app.add_directive('teximage', TeXImageDirective)
-    app.add_node(teximage,
-                 html=(visit_teximage, depart_teximage))
+    app.add_config_value('texfigure_pdftex', 'pdflatex', 'env')
+    app.add_config_value('texfigure_pdftoppm', 'pdftoppm', 'env')
+    app.add_config_value('texfigure_pnmcrop', 'pnmcrop', 'env')
+    app.add_config_value('texfigure_pnmtopng', 'pnmtopng', 'env')
+    app.add_config_value('texfigure_texinputs', [], 'env')
+    app.add_config_value('texfigure_resolution', 110, 'env')
+    app.add_directive('texfigure', TeXFigureDirective)
+    app.add_node(texfigure,
+                 html=(visit_texfigure, depart_texfigure))
 
 

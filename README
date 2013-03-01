@@ -1,12 +1,12 @@
-****************************************************************
-  ``sphinxcontrib-teximage`` -- TeX Image extension for Sphinx
-****************************************************************
+******************************************************************
+  ``sphinxcontrib-texfigure`` -- TeX Figure extension for Sphinx
+******************************************************************
 
 Overview
 ========
 
-``sphinxcontrib-teximage`` is an extension for generating diagrams
-from TeX documents and embedding them into Sphinx_ documents.
+``sphinxcontrib-texfigure`` is an extension for generating figures and
+diagrams from TeX files and embedding them into Sphinx_ documents.
 
 For an example of a diagram this extension could produce, please see
 http://htsql.org/doc/overview.html#htsql-in-a-nutshell
@@ -21,21 +21,21 @@ and released under BSD license.
 Prerequisites
 =============
 
-To convert a TeX document to a raster image, the extension uses the
-following executables::
+The following executables are used for rasterizing TeX documents:
 
 * ``pdflatex``
 * ``pdftoppm``
 * ``pnmcrop``
 * ``pnmtopng``
 
-On a Debian_ or `Debian-derived`_ system, they could be installed with::
+On a Debian_ or a `Debian-derived`_ system, they could be installed
+with::
 
     # apt-get install texlive
     # apt-get install poppler-utils
     # apt-get install netpbm
 
-If you want to generate diagrams using TikZ_, install::
+If you want to generate diagrams with TikZ_, install::
 
     # apt-get install texlive-pictures
 
@@ -45,27 +45,32 @@ Usage
 
 To enable this extension, add the following line to ``conf.py``::
 
-    extensions.append('sphinxcontrib.teximage')
+    extensions.append('sphinxcontrib.texfigure')
 
-To render an image from a TeX document, use ``teximage`` directive::
+Use ``texfigure`` directive to convert a TeX/LaTeX document to an image.
+For example::
 
-    .. teximage:: diagram.tex
+    .. texfigure:: hello-world.tex
 
-Place the file ``diagram.tex`` in the same directory.  It must contain
-a valid TeX/LaTeX document.  For example::
+This directive will render *Hello, World!* in a box assuming that
+``hello-world.tex`` contains the following LaTeX document::
 
-    \documentclass{article}
+       \documentclass{article}
+       \usepackage{tikz}
+       \pagestyle{empty}
 
-    \usepackage{tikz}
-    \pagestyle{empty}
+       \begin{document}
+       \begin{tikzpicture}
+       \node[draw] {Hello, World!};
+       \end{tikzpicture}
+       \end{document}
 
-    \begin{document}
+Use option ``align`` to specify horizontal alignment, ``alt`` to specify
+text content of the image::
 
-    \begin{tikzpicture}
-    \node[draw] {Hello, World!};
-    \end{tikzpicture}
-
-    \end{document}
+    .. texfigure:: hello-world.tex
+       :align: center
+       :alt: Hello, World!
 
 
 Reference
@@ -74,42 +79,44 @@ Reference
 Directives
 ----------
 
-``teximage``
+``texfigure``
     Renders an image from a TeX document.
+
+    The parameter of the directive must be the path to a TeX/LaTeX file.
+    This directive has no body.
 
     Options:
 
     ``align``
-        Image alignment (``left``, ``center``, or ``right``)
-
+        Horizontal alignment (``left``, ``center``, or ``right``)
     ``alt``
-        Image alternative text.
+        Alternative text content of the image.
 
 Configuration parameters
 ------------------------
 
-``teximage_pdftex`` (default: ``pdflatex``)
+``texfigure_pdftex`` (default: ``pdflatex``)
     Path to ``pdftex`` or ``pdflatex`` executable.
 
-``teximage_pdftoppm`` (default: ``pdftoppm``)
+``texfigure_pdftoppm`` (default: ``pdftoppm``)
     Path to ``pdftoppm`` executable.
 
-``teximage_pnmcrop`` (default: ``pnmcrop``)
+``texfigure_pnmcrop`` (default: ``pnmcrop``)
     Path to ``pnmcrop`` executable.
 
-``teximage_pnmtopng`` (default: ``pnmtopng``)
+``texfigure_pnmtopng`` (default: ``pnmtopng``)
     Path to ``pnmtopng`` executable.
 
-``teximage_texinputs`` (default: ``[]``)
+``texfigure_texinputs`` (default: ``[]``)
     List of directories where TeX searches for input files.
 
-``teximage_resolution`` (default: ``110``)
+``texfigure_resolution`` (default: ``110``)
     Image resolution, in DPI.
 
 CSS classes
 -----------
 
-``teximage``
+``texfigure``
     Wraps the generated image.
 
 

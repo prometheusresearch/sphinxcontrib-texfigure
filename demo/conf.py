@@ -1,6 +1,6 @@
 
-# Enable `sphinxcontrib-teximage` extension.
-extensions = ['sphinxcontrib.teximage']
+# Enable `sphinxcontrib-texfigure` extension.
+extensions = ['sphinxcontrib.texfigure']
 
 # Standard configuration.
 project = u'A Project with Diagrams'

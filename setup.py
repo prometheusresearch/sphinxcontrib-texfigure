@@ -6,15 +6,15 @@
 from setuptools import setup
 
 
-NAME = "sphinxcontrib-teximage"
+NAME = "sphinxcontrib-texfigure"
 VERSION = "0.1"
-DESCRIPTION = "TeX Image extension for Sphinx"
+DESCRIPTION = "TeX Figure extension for Sphinx"
 LONG_DESCRIPTION = open('README').read()
 AUTHOR = "Kirill Simonov (Prometheus Research, LLC)"
 AUTHOR_EMAIL = "xi@resolvent.net"
 LICENSE = "BSD"
-URL = "http://bitbucket.org/prometheus/sphinxcontrib-teximage"
-DOWNLOAD_URL = "http://pypi.python.org/pypi/sphinxcontrib-teximage"
+URL = "http://bitbucket.org/prometheus/sphinxcontrib-texfigure"
+DOWNLOAD_URL = "http://pypi.python.org/pypi/sphinxcontrib-texfigure"
 CLASSIFIERS = [
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
