@@ -9,7 +9,8 @@ Overview
 figures and diagrams from TeX files.
 
 For an example of a diagram this extension could produce, please see
-http://htsql.org/doc/overview.html#htsql-in-a-nutshell.
+http://htsql.org/doc/overview.html#htsql-in-a-nutshell.  For more
+examples, see ``demo`` directory in the source distribution.
 
 This extension is similar in scope to `sphinxcontrib-tikz`_ extension,
 but with different approach to input and options.
